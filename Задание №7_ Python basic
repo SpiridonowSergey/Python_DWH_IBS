@@ -1,0 +1,55 @@
+Необходимо дополнить "Практическое задание №6" таким образом, чтобы в конце программы мы вызвали статический метод родительского класса Animal, который вывел бы нам количество всех созданных экземпляров.
+Если мы создали трех наследников в предыдущем задании, то наш метод должен вывести на экран число 3.
+
+class Animal:
+    countexp = 0
+
+    def __init__(self, name):
+        self.name = name
+        Animal.countexp = Animal.countexp + 1
+
+    def voice(self):
+        print("рррррррр")
+        Animal.countexp = Animal.countexp + 1
+
+    def printcountexp():
+        print(Animal.countexp)
+
+    printcountexp = staticmethod(printcountexp)
+
+
+class Dog(Animal):
+
+    def __init__(self, name):
+        Animal.__init__(self, name)
+
+    def voice(self):
+        print("гав-гав")
+
+
+class Cat(Animal):
+
+    def __init__(self, name):
+        Animal.__init__(self, name)
+
+    def voice(self):
+        print("мяу-мяу")
+
+
+class Pig(Animal):
+
+    def __init__(self, name):
+        Animal.__init__(self, name)
+
+    def voice(self):
+        print("хрю-хрю")
+
+dog = Dog('Tom')
+cat = Cat('Gas')
+pig = Pig('Jim')
+
+dog.voice()
+cat.voice()
+pig.voice()
+
+Animal.printcountexp()
