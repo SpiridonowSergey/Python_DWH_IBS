@@ -10,8 +10,7 @@ class Animal:
 
     def voice(self):
         print("рррррррр")
-        Animal.countexp = Animal.countexp + 1
-
+        
     def printcountexp():
         print(Animal.countexp)
 
