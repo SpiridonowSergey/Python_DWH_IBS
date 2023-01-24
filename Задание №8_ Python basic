@@ -1,0 +1,17 @@
+#Необходимо считать любой текстовый файл на вашем ПК (можно создать новый) и создать на его основе новый файл,
+#где содержимое будет записано в обратном порядке. В конце программы вывести на экран оба файла - старый в неизменном виде и новый в обратном порядке.
+
+a = []
+with open('test.txt', 'r') as f:
+    for line in f:
+        reverse_line = line[::-1]
+        a.insert(0, reverse_line)
+
+with open('reverse_test.txt', 'w') as rf:
+    rf.writelines(a)
+
+with open('test.txt', 'r') as f:
+    print(f.read())
+
+with open('reverse_test.txt', 'r') as rf:
+    print(rf.read())
