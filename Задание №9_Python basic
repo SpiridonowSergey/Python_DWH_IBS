@@ -1,0 +1,37 @@
+#Необходимо создать два параллельных потока, каждый из которых выводил бы на экран числа от 10 до 1 в обратном порядке с интервалом в одну секунду.
+#В выводе должно быть понятно какая нить выполняется, и когда каждая из них начинает и заканчивает своё выполнение.
+
+import threading
+import time
+
+def Potok1(interval):
+    a = threading.current_thread()
+    print(f'Время: {time.ctime()} Поток: {a} - начался', end='\r\n')
+    i = 10
+    while i > 0:
+        print(f'Время: {time.ctime()} Поток: {a}', i, end='\r\n')
+        time.sleep(interval)
+        i -= 1
+
+
+def Potok2(interval):
+    b = threading.current_thread()
+    print(f'Время: {time.ctime()} Поток: {b} - начался', end='\r\n')
+    i = 10
+    while i > 0:
+        print(f'Время: {time.ctime()} Поток: {b}', i, end='\r\n')
+        time.sleep(interval)
+        i -= 1
+
+
+t1 = threading.Thread(target=Potok1, args=(1,))
+
+t1.daemon = True
+t1.start()
+
+t2 = threading.Thread(target=Potok2, args=(1,))
+t2.daemon = True
+t2.start()
+
+t1.join()
+t2.join()
