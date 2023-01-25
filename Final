@@ -1,0 +1,62 @@
+import json
+import shutil
+import traceback
+from os import path, mkdir
+from os.path import isdir
+from typing import Union, List
+import pandas as pd
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from pydantic import BaseModel
+from collections import Counter
+from pathlib import Path
+import csv
+import os.path
+
+
+app = FastAPI()
+
+@app.get('/')
+def Home():
+    return{"key":"Hello"}
+
+@app.post('/filter/case_sensitive')
+def UniqList(a: list):
+    a1 = list(map(lambda x: x.lower(), a))
+    a1 = ([k for (k, v) in Counter(a1).items() if v <= 2])
+    return{"Вывод": a1}
+
+@app.post("/upload/<file_name>")
+async def upload(file: UploadFile = File(...)):
+    if file.content_type != "text/csv":
+       if file.content_type != "application/json":
+           raise HTTPException(415, file.filename)
+
+    df = None
+    try:
+        if file.content_type == "text/csv":
+            df = pd.read_csv(file.file, sep=';')
+        if file.content_type == "application/json":
+            data = json.load(file.file)
+            df = pd.DataFrame(data)
+            #df = pd.read_json(file.file, encoding='utf-8')
+
+
+        #pd.read_json(df.to_json(orient='records', lines=True), lines=True)
+
+        if path.exists("file_name.csv"):
+            df1 = pd.read_csv("file_name.csv", sep=',')
+            result = df1.join(df, lsuffix="_left", rsuffix="_right")#pd.concat([df1,df], axis=1, join="inner")
+            result.to_csv('file_name.csv', mode='w')
+        else:#df3=df1.join(df2, lsuffix="_left", rsuffix="_right")
+            df.to_csv('file_name.csv', mode='w')
+        #with open("file_name.csv", "ab") as buffer:
+         #   shutil.copyfileobj(file.file, buffer)
+    except Exception as ex:
+        with open('exceptions.log', 'a', encoding='utf-8') as file:
+            file.write(traceback.format_exc())
+
+    if not isdir('data'):
+        mkdir('data')
+
+
+    return {"filename": file.filename}
